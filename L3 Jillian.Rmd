@@ -1,0 +1,14 @@
+---
+title: "L3"
+author: "Lynn Ficarra"
+date: "Thursday, September 10, 2015"
+output: html_document
+---
+
+#in git bash - cd means change directory within one level (eg. desktop), cd then assign where you are going to go
+#cd ~ gets you back to the beginning
+#ls means list contents within the directory
+#repository=directory=folder
+#mkdir is make directory
+#pwd tells you where you are right now: path to workign directory
+#cd .. brings up up one level
