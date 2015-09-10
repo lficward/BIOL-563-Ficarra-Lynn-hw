@@ -10,5 +10,13 @@ output: html_document
 #ls means list contents within the directory
 #repository=directory=folder
 #mkdir is make directory
-#pwd tells you where you are right now: path to workign directory
+#pwd tells you where you are right now: path to working directory
 #cd .. brings up up one level
+#make a change, staging area, git commit saves it to repository
+#git status - observe changes
+#git add - add whatever changes you made
+#git commit - adds to repository to keep track of changes
+#add message to explain why you made the changes you did
+#so far all of this is only on your personal computer
+#git commit -m '' to add a message
+#git diff
