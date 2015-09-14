@@ -11,7 +11,10 @@ Make 3 Changes
 **Bold Font**
 
 2nd Change
-Add a ^superscript
+Add R code
+```{r, ECHO=TRUE}
+2+2
+```
 
 3rd Change
 Add a ~~strikethrough~~
