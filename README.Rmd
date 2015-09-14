@@ -12,7 +12,7 @@ Make 3 Changes
 
 2nd Change
 Add R code
-```{r, ECHO=TRUE}
+```{r, ECHO=TRUE, EVAL=TRUE}
 2+2
 ```
 
