@@ -11,7 +11,7 @@ Make 3 Changes
 **Bold Font**
 
 2nd Change
-Add a^superscript^
+Add a ^superscript^
 
 3rd Change
 Add a ~~strikethrough~~
