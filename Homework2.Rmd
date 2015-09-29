@@ -1,0 +1,188 @@
+---
+title: "Homework 2"
+author: "Lynn Ficarra"
+date: "September 25, 2015"
+output: html_document
+---
+
+Load the gapminder dataset
+```{r}
+library(gapminder)
+```
+Load ggplot
+```{r}
+library(ggplot2)
+```
+Part I  
+
+Plot 1  
+```{r}
+#use gapminder dataset
+#specify aesthetics
+#specify the data used for the x and y axes 
+#plot the data by country
+#assign color and shape to the data points based on continent
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, by = country, color = continent, shape = continent)) + 
+  #add points to the plot
+     geom_point()
+```  
+     
+Plot 2  
+```{r}
+#everything is the same as the previous plot, but we have to transform the x axis
+#add a layer that scales the x axis to log10
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, by = country, color = continent, shape = continent)) + 
+     geom_point() +
+     scale_x_log10()
+```
+  
+Plot 3  
+```{r}
+#Start with the same code from the previous plot
+#Want to add a linear fit
+#Create a new layer
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, by = country, color = continent, shape = continent)) +
+     geom_point() +
+     scale_x_log10() +
+    #Use stat_smooth with a linear model (lm)
+    #In aesthetics, specify that we are treating all the data as 1 group
+    #This creates one line fit to all the data, rather than one line per continent
+     stat_smooth(method="lm", aes(group = 1))
+```    
+  
+Plot 4    
+```{r}
+#set x to lifeExp, but don't specify a y value because that will be density
+#we want the density of life expectancy by continent, so set fill to continent so the density curves will each be filled
+#do not specify color because we want each curve line to be black
+ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
+   #add the density curves and set an alpha of 0.5 for transparency of overlapping data
+  geom_density(alpha = 0.5) +
+   #wrap the facets by year to separate out the data by year
+   facet_wrap( ~ year, ncol = 4)
+```
+  
+Plot 5  
+```{r}
+#specify x and y axes
+#we are displaying the data by continent (different boxplot and color for each continent)
+ggplot(gapminder, aes(x = continent, y = lifeExp, by = continent, color = continent)) +
+  #add boxplots
+   geom_boxplot() +
+  #correct the x axis by rotating the text 90 degrees 
+   theme(axis.text.x = element_text(angle = 90)) +
+  #facet the results by year
+   facet_wrap( ~ year, ncol = 4)
+```
+  
+Part II   
+  
+Plot 6  
+```{r}
+#load dplyr 
+library(dplyr)
+#create an object that contains only the lifeExp and continent columns from the gapminder dataset
+continentLifeExp <- select(gapminder, lifeExp, continent)
+#specify this new dataset for the plot
+#set the x axis to lifeExp
+#have ggplot to produce one curve and fill color per continent
+ggplot(continentLifeExp, aes(x = lifeExp, fill = continent)) + 
+   #add the density curves and set an alpha of 0.5 for transparency of overlapping data
+  geom_density(alpha = 0.5)
+```
+  
+Plot 7  
+```{r}
+#pull out only the lifeExpectency values for the Asian continent
+#assign the two columns to a new object
+Asia_lifeExp <- filter(continentLifeExp, continent == "Asia")
+#plot the life expectancies of Asia on the x axis
+ggplot(Asia_lifeExp, aes(x = lifeExp)) + 
+   #add a density curve and set alpha to 0.5 for transparency of fill
+   #set fill color to green
+  geom_density(alpha = 0.5, fill = "green") +
+   #specify a title for the plot
+  ggtitle("Life expectancy in Asia") + 
+   #add a vertical line with an x intercept equal to the mean of the life expectency data
+  geom_vline(aes(xintercept = mean(lifeExp)))
+```
+  
+Plot 8 - a  
+```{r}
+#assign new object to store new data fram
+mean_lifeExp <- 
+gapminder %>%
+  #in the gap minder dataset, arrange rows by continent
+   group_by(continent) %>%
+  #calculate the average life expectancy for each continent
+   summarise(avg = mean(lifeExp))
+
+#view the new data frame
+mean_lifeExp
+
+```
+  
+Plot 8b  
+```{r}
+#plot the gapminder data with life expectancy on the x axis
+#each continent gets a different fill color
+ggplot(gapminder, aes(x = lifeExp, fill = continent)) +
+  #add density curves, set alpha for transparency
+   geom_density(alpha = 0.5) +
+  #facet the plot by continent
+   facet_wrap(~ continent, ncol = 3) +
+  #add a vertical line representing the mean life expectancy for each continent
+   geom_vline(aes(xintercept = avg), mean_lifeExp)
+```
+  
+Part III: Troubleshooting Practice  
+```{r}
+#read .csv file in and assign it to an object
+hw_gapminder <- read.csv('./hw_gapminder.csv')
+```
+Error 1: Typo
+```{r}
+#produces an error message because lifeExpe should be lifeExp (no e at the end)
+#mean_lifeExp <- mean(hw_gapminder$lifeExpe)
+#fix typo and re-run code
+mean_lifeExp <- mean(hw_gapminder$lifeExp)
+#Now when we look at the contents of mean_lifeExp, we get a numerical answer
+mean_lifeExp
+```
+Error 2: Indexing
+```{r}
+#run code
+#error message
+#small_set <- hw_gapminder[c(1, 2, 3, 4, 1300:1304), ('country', 'continent', 'year')]
+#trying to obtain values for specified locations
+#('country', 'continent', 'year') are columns titles, not locations
+#to index, need to specify that we want the columns in positions 1:3
+small_set <- hw_gapminder[c(1, 2, 3, 4, 1300:1304), 1:3]
+#check results
+small_set
+```
+Error 3: NAs
+```{r}
+#run the code
+#code successful run
+mean_gdp <- mean(hw_gapminder$gdpPercap)
+#but, value is NA
+mean_gdp
+#if there are NAs, in the dataset, can't take the mean of the dataset
+#so specify that you want NAs removed before taking the mean
+mean_gdp <- mean(hw_gapminder$gdpPercap, na.rm = TRUE)
+#check results
+mean_gdp
+```
+Error 4: Equal Sign
+```{r}
+#run the code
+#error states there is an unexpected '=' in the code
+#look at the = sign
+#'which' statements require "==" rather than "="
+#max_country <- hw_gapminder$country[which(hw_gapminder$lifeExp = max(hw_gapminder$lifeExp))]
+#add second equal sign in
+max_country <- hw_gapminder$country[which(hw_gapminder$lifeExp == max(hw_gapminder$lifeExp))]
+#check results
+max_country
+```
