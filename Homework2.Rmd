@@ -6,16 +6,19 @@ output: html_document
 ---
 
 Load the gapminder dataset
+
 ```{r}
 library(gapminder)
 ```
 Load ggplot
+
 ```{r}
 library(ggplot2)
 ```
 Part I  
 
 Plot 1  
+
 ```{r}
 #use gapminder dataset
 #specify aesthetics
@@ -27,6 +30,7 @@ ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, by = country, color = continen
      geom_point()
 ```  
      
+
 Plot 2  
 ```{r}
 #everything is the same as the previous plot, but we have to transform the x axis
@@ -36,7 +40,8 @@ ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, by = country, color = continen
      scale_x_log10()
 ```
   
-Plot 3  
+Plot 3
+
 ```{r}
 #Start with the same code from the previous plot
 #Want to add a linear fit
@@ -63,6 +68,7 @@ ggplot(gapminder, aes(x = lifeExp, fill = continent)) +
 ```
   
 Plot 5  
+
 ```{r}
 #specify x and y axes
 #we are displaying the data by continent (different boxplot and color for each continent)
@@ -78,6 +84,7 @@ ggplot(gapminder, aes(x = continent, y = lifeExp, by = continent, color = contin
 Part II   
   
 Plot 6  
+
 ```{r}
 #load dplyr 
 library(dplyr)
@@ -89,9 +96,22 @@ continentLifeExp <- select(gapminder, lifeExp, continent)
 ggplot(continentLifeExp, aes(x = lifeExp, fill = continent)) + 
    #add the density curves and set an alpha of 0.5 for transparency of overlapping data
   geom_density(alpha = 0.5)
+
+
+# JD: It can be preferable when the object is small, to create the data subset 
+# within the ggplot so that you don't end up with many little objects running 
+# filling up your workspace:
+
+ggplot(filter(gapminder, lifeExp, continent), aes(x = lifeExp, fill = continent)) + 
+  geom_denisty(alpha = 0.5)
+
+# Also in this case the instructions were a bit misleading, it wasn't necessary 
+# to use dplyr for this plot.
+
 ```
   
 Plot 7  
+
 ```{r}
 #pull out only the lifeExpectency values for the Asian continent
 #assign the two columns to a new object
@@ -105,9 +125,12 @@ ggplot(Asia_lifeExp, aes(x = lifeExp)) +
   ggtitle("Life expectancy in Asia") + 
    #add a vertical line with an x intercept equal to the mean of the life expectency data
   geom_vline(aes(xintercept = mean(lifeExp)))
+
+# Again, probably preferable to include the filtering in the first ggplot() line.
 ```
   
 Plot 8 - a  
+
 ```{r}
 #assign new object to store new data fram
 mean_lifeExp <- 
@@ -123,6 +146,7 @@ mean_lifeExp
 ```
   
 Plot 8b  
+
 ```{r}
 #plot the gapminder data with life expectancy on the x axis
 #each continent gets a different fill color
@@ -136,11 +160,14 @@ ggplot(gapminder, aes(x = lifeExp, fill = continent)) +
 ```
   
 Part III: Troubleshooting Practice  
+
 ```{r}
 #read .csv file in and assign it to an object
 hw_gapminder <- read.csv('./hw_gapminder.csv')
 ```
+
 Error 1: Typo
+
 ```{r}
 #produces an error message because lifeExpe should be lifeExp (no e at the end)
 #mean_lifeExp <- mean(hw_gapminder$lifeExpe)
@@ -150,6 +177,7 @@ mean_lifeExp <- mean(hw_gapminder$lifeExp)
 mean_lifeExp
 ```
 Error 2: Indexing
+
 ```{r}
 #run code
 #error message
@@ -160,8 +188,16 @@ Error 2: Indexing
 small_set <- hw_gapminder[c(1, 2, 3, 4, 1300:1304), 1:3]
 #check results
 small_set
+
+# What I was looking for here was the missing c():
+small_set <- hw_gapminder[c(1, 2, 3, 4, 1300:1304), c('country', 'continent', 'year')]
+# Doing it by position works too, but sometimes it can be easier to know what 
+# columns are being selected if they're explcitly named (more important in 
+# larger datasets)
 ```
+
 Error 3: NAs
+
 ```{r}
 #run the code
 #code successful run
@@ -175,11 +211,12 @@ mean_gdp <- mean(hw_gapminder$gdpPercap, na.rm = TRUE)
 mean_gdp
 ```
 Error 4: Equal Sign
+
 ```{r}
 #run the code
 #error states there is an unexpected '=' in the code
 #look at the = sign
-#'which' statements require "==" rather than "="
+# 'which' statements require "==" rather than "="
 #max_country <- hw_gapminder$country[which(hw_gapminder$lifeExp = max(hw_gapminder$lifeExp))]
 #add second equal sign in
 max_country <- hw_gapminder$country[which(hw_gapminder$lifeExp == max(hw_gapminder$lifeExp))]
