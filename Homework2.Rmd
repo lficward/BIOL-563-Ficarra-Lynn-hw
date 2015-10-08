@@ -103,7 +103,7 @@ ggplot(continentLifeExp, aes(x = lifeExp, fill = continent)) +
 # filling up your workspace:
 
 ggplot(filter(gapminder, lifeExp, continent), aes(x = lifeExp, fill = continent)) + 
-  geom_denisty(alpha = 0.5)
+  geom_density(alpha = 0.5)
 
 # Also in this case the instructions were a bit misleading, it wasn't necessary 
 # to use dplyr for this plot.
